@@ -1,7 +1,7 @@
 import { webpackBundler } from '@payloadcms/bundler-webpack' // bundler-import
-import { mongooseAdapter } from '@payloadcms/db-mongodb' // database-adapter-import
 import type { GenerateTitle } from '@payloadcms/plugin-seo/types'
 
+import { postgresAdapter } from '@payloadcms/db-postgres'
 import { payloadCloud } from '@payloadcms/plugin-cloud'
 // import formBuilder from '@payloadcms/plugin-form-builder'
 import nestedDocs from '@payloadcms/plugin-nested-docs'
@@ -20,7 +20,7 @@ import { Projects } from './collections/Projects'
 import Users from './collections/Users'
 import BeforeDashboard from './components/BeforeDashboard'
 import BeforeLogin from './components/BeforeLogin'
-import { resetDBEndpoint, clearDBEndpoint, seedDBEndpoint } from './endpoints/resetDB'
+import { clearDBEndpoint, resetDBEndpoint, seedDBEndpoint } from './endpoints/resetDB'
 import { Footer } from './globals/Footer'
 import { Header } from './globals/Header'
 import { Settings } from './globals/Settings'
@@ -85,8 +85,10 @@ export default buildConfig({
   // database-adapter-config-start
   cors: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
   csrf: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
-  db: mongooseAdapter({
-    url: process.env.DATABASE_URI,
+  db: postgresAdapter({
+    pool: {
+      connectionString: process.env.DATABASE_URI,
+    },
   }),
   plugins: [
     // formBuilder({}),
